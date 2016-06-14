@@ -6,7 +6,7 @@ nav.navbar.navbar-default.navbar-static-top
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href='/') Project name
+      a.navbar-brand(href='/') Face de bouc
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav
         li(class=(title == 'Home') ? 'active' : null)
@@ -21,7 +21,7 @@ nav.navbar.navbar-default.navbar-static-top
                 img(src=user.picture)
               else
                 img(src=user.gravatar)
-              | <span> #{user.name || user.email || user.id} </span>
+              | <span> #{user.pseudo || user.email || user.id} </span>
               i.caret
             ul.dropdown-menu
               li

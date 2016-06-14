@@ -145,10 +145,15 @@ exports.accountPut = function(req, res, next) {
       user.password = req.body.password;
     } else {
       user.email = req.body.email;
+      user.pseudo = req.body.pseudo;
       user.name = req.body.name;
+      user.prenom = req.body.prenom;
       user.gender = req.body.gender;
+      user.age = req.body.age;
       user.location = req.body.location;
       user.website = req.body.website;
+      user.photo = req.body.photo;
+      user.presentation = req.body.presentation;
     }
     user.save(function(err) {
       if ('password' in req.body) {

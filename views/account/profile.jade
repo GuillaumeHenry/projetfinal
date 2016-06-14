@@ -20,20 +20,32 @@ block content
             .col-sm-7
               input.form-control(type='email', name='email', id='email', value=user.email)
           .form-group
-            label.col-sm-3(for='name') Name
+            label.col-sm-3(for='pseudo') Pseudo
+            .col-sm-7
+              input.form-control(type='text', name='pseudo', id='pseudo', value=user.pseudo)
+          .form-group
+            label.col-sm-3(for='name') Nom
             .col-sm-7
               input.form-control(type='text', name='name', id='name', value=user.name)
           .form-group
-            label.col-sm-3 Gender
+            label.col-sm-3(for='prenom') Prenom
+            .col-sm-7
+              input.form-control(type='text', name='prenom', id='prenom', value=user.prenom)
+          .form-group
+            label.col-sm-3 Genre
             .col-sm-4
               label.radio-inline.radio.col-sm-4
                 input(type='radio', checked=(user.gender == 'male'), name='gender', value='male', data-toggle='radio')
-                span Male
+                span Homme
               label.radio-inline.col-sm-4
                 input(type='radio', checked=(user.gender == 'female'), name='gender', value='female', data-toggle='radio')
-                span Female
+                span Femme
           .form-group
-            label.col-sm-3(for='location') Location
+            label.col-sm-3(for='age') Age
+            .col-sm-7
+              input.form-control(type='number', name='age', id='age', value=user.age)
+          .form-group
+            label.col-sm-3(for='location') Coordonnées
             .col-sm-7
               input.form-control(type='text', name='location', id='location', value=user.location)
           .form-group
@@ -41,9 +53,13 @@ block content
             .col-sm-7
               input.form-control(type='text', name='website', id='website', value=user.website)
           .form-group
-            label.col-sm-3 Gravatar
+            label.col-sm-3 Photo
             .col-sm-4
-              img(src=user.gravatar, class='profile', width='100', height='100')
+              img(src=user.photo, class='profile', width='100', height='100')
+          .form-group
+            label.col-sm-3(for='presentation') Présentation
+            .col-sm-7
+              textarea.form-control(rows='4', cols='50', name='presentation', value=user.presentation)
           .form-group
             .col-sm-offset-3.col-sm-4
               button.btn.btn-success(type='submit') Update Profile
