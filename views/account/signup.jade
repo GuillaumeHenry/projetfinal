@@ -10,28 +10,28 @@ block content
               div= error.msg
 
         form(method='POST')
-          legend Create an account
+          legend Créer un compte
           .form-group
-            label(for='name') Name
-            input.form-control(type='text', name='name', id='name', placeholder='Name', autofocus=true)
+            label(for='name') Nom
+            input.form-control(type='text', name='name', id='name', placeholder='Nom', autofocus=true)
           .form-group
             label(for='email') Email
             input.form-control(type='email', name='email', id='email', placeholder='Email')
           .form-group
-            label(for='password') Password
-            input.form-control(type='password', name='password', id='password', placeholder='Password')
+            label(for='password') Mot de passe
+            input.form-control(type='password', name='password', id='password', placeholder='Mot de passe')
           .form-group
-            small.text-muted By signing up, you agree to the <a href="/">Terms of Service</a>.
-          button.btn.btn-success(type='submit') Create an account
+            small.text-muted En signant ici, vous adhérez aux <a href="/">Conditions de service</a>.
+          button.btn.btn-success(type='submit') Créer un compte
 
         .hr-title
-          span or
+          span ou
 
         .btn-toolbar.text-center
-          a.btn.btn-facebook(href='/auth/facebook') Sign in with Facebook
-          a.btn.btn-twitter(href='/auth/twitter') Sign in with Twitter
-          a.btn.btn-google(href='/auth/google') Sign in with Google
+          a.btn.btn-facebook(href='/auth/facebook') Se connecter avec Facebook
+          a.btn.btn-twitter(href='/auth/twitter') Se connecter avec Twitter
+          a.btn.btn-google(href='/auth/google') Se connecter avec Google
 
-    p.text-center Already have an account?&nbsp;
+    p.text-center Vous avez déjà un compte?&nbsp;
       a(href='/login')
-        strong Log in
+        strong Connexion

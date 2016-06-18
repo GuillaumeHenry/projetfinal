@@ -10,26 +10,26 @@ block content
               div= error.msg
 
         form(method='POST')
-          legend Log In
+          legend Connexion
           .form-group
             label.control-label(for='email') Email
             input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus=true)
           .form-group
-            label.control-label(for='password') Password
-            input.form-control(type='password', name='password', id='password', placeholder='Password')
+            label.control-label(for='password') Mot de passe
+            input.form-control(type='password', name='password', id='password', placeholder='Mot de passe')
           .form-group
             a(href='/forgot')
-              strong Forgot your password?
-          button.btn.btn-success(type='submit') Log in
+              strong Mot de passe oublié ?
+          button.btn.btn-success(type='submit') Connexion
 
         .hr-title
-          span or
+          span ou
 
         .btn-toolbar.text-center
-          a.btn.btn-facebook(href='/auth/facebook') Sign in with Facebook
-          a.btn.btn-twitter(href='/auth/twitter') Sign in with Twitter
-          a.btn.btn-google(href='/auth/google') Sign in with Google
+          a.btn.btn-facebook(href='/auth/facebook') Se connecter avec Facebook
+          a.btn.btn-twitter(href='/auth/twitter') Se connecter avec Twitter
+          a.btn.btn-google(href='/auth/google') Se connecter avec Google
 
-    p.text-center Don't have an account?&nbsp;
+    p.text-center Pas encore inscrit?&nbsp;
       a(href='/signup')
-        strong Sign up
+        strong Inscrivez-vous

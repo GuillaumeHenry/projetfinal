@@ -10,7 +10,7 @@ nav.navbar.navbar-default.navbar-static-top
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav
         li(class=(title == 'Home') ? 'active' : null)
-          a(href='/') Home
+          a(href='/') Accueil
         li(class=(title == 'Contact') ? 'active' : null)
           a(href='/contact') Contact
       ul.nav.navbar-nav.navbar-right
@@ -21,16 +21,16 @@ nav.navbar.navbar-default.navbar-static-top
                 img(src=user.picture)
               else
                 img(src=user.gravatar)
-              | <span> #{user.pseudo || user.email || user.id} </span>
+              | <span> #{user.pseudo || user.name || user.email || user.id} </span>
               i.caret
             ul.dropdown-menu
               li
-                a(href='/account') My Account
+                a(href='/account') Mon profil
               li.divider
               li
-                a(href='/logout') Logout
+                a(href='/logout') Se déconnecter
         else
           li(class=(title == 'Log in') ? 'active' : null)
-            a(href='/login') Log in
+            a(href='/login') Connexion
           li(class=(title == 'Sign up') ? 'active' : null)
-            a(href='/signup') Sign up
+            a(href='/signup') Inscription

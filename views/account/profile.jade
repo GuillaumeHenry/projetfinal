@@ -14,7 +14,7 @@ block content
               div= error.msg
 
         form.form-horizontal(method='POST', action='/account?_method=PUT')
-          legend Profile Information
+          legend Informations
           .form-group
             label.col-sm-3(for='email') Email
             .col-sm-7
@@ -49,61 +49,61 @@ block content
             .col-sm-7
               input.form-control(type='text', name='location', id='location', value=user.location)
           .form-group
-            label.col-sm-3(for='website') Website
+            label.col-sm-3(for='website') Site internet
             .col-sm-7
               input.form-control(type='text', name='website', id='website', value=user.website)
           .form-group
             label.col-sm-3 Photo
+            .col-sm-7
+              input.form-control(type='file', name='photo', id='photo', value=user.photo)
+          .form-group
+            label.col-sm-3 
             .col-sm-4
               img(src=user.photo, class='profile', width='100', height='100')
           .form-group
-            label.col-sm-3(for='presentation') Présentation
-            .col-sm-7
-              textarea.form-control(rows='4', cols='50', name='presentation', value=user.presentation)
-          .form-group
             .col-sm-offset-3.col-sm-4
-              button.btn.btn-success(type='submit') Update Profile
+              button.btn.btn-success(type='submit') Mettre à jour
 
     .panel
       .panel-body
         form.form-horizontal(method='POST', action='/account?_method=PUT')
-          legend Change Password
+          legend Changer de mot de passe
           .form-group
-            label.col-sm-3(for='password') New Password
+            label.col-sm-3(for='password') Nouveau mot de passe
             .col-sm-7
               input.form-control(type='password', name='password', id='password')
           .form-group
-            label.col-sm-3(for='confirm') Confirm Password
+            label.col-sm-3(for='confirm') Confirmation du mot de passe
             .col-sm-7
               input.form-control(type='password', name='confirm', id='confirm')
           .form-group
             .col-sm-4.col-sm-offset-3
-              button.btn.btn-success(type='submit') Change Password
+              button.btn.btn-success(type='submit') Changer de mot de passe
 
     .panel
       .panel-body
         .form-horizontal
-          legend Linked Accounts
+          legend Comptes attachés
           .form-group
             .col-sm-offset-3.col-sm-4
               if user.facebook
-                p: a.text-danger(href='/unlink/facebook') Unlink your Facebook account
+                p: a.text-danger(href='/unlink/facebook') Détacher votre compte Facebook
               else
-                p: a(href='/auth/facebook') Link your Facebook account
+                p: a(href='/auth/facebook') Lier à un compte Facebook
               if user.twitter
-                p: a.text-danger(href='/unlink/twitter') Unlink your Twitter account
+                p: a.text-danger(href='/unlink/twitter') Détacher votre compte Twitter
               else
-                p: a(href='/auth/twitter') Link your Twitter account
+                p: a(href='/auth/twitter') Lier à un compte Twitter
               if user.google
-                p: a.text-danger(href='/unlink/google') Unlink your Google account
+                p: a.text-danger(href='/unlink/google') Détacher votre compte Google
               else
-                p: a(href='/auth/google') Link your Google account
+                p: a(href='/auth/google') Lier à un compte Google
 
     .panel
       .panel-body
         form.form-horizontal(method='POST', action='/account?_method=DELETE')
-          legend Delete Account
+          legend Supprimer le compte
           .form-group
-            p.col-sm-offset-3.col-sm-9 You can delete your account, but keep in mind this action is irreversible.
+            p.col-sm-offset-3.col-sm-9 Vous pouvez supprimer votre compte mais souvenez-vous que cette action est irréversible.
             .col-sm-offset-3.col-sm-9
-              button.btn.btn-danger(type='submit') Delete my account
+              button.btn.btn-danger(type='submit') Supprimer mon compte

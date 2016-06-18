@@ -27,7 +27,7 @@ var app = express();
 
 mongoose.connect(process.env.MONGODB);
 mongoose.connection.on('error', function() {
-  console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
+  console.log('Problème de connexion à Mongo. Assurez vous que MongoDB est bien démarré.');
   process.exit(1);
 });
 app.set('views', path.join(__dirname, 'views'));
@@ -81,7 +81,7 @@ if (app.get('env') === 'production') {
 }
 
 app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log('Ecoute du serveur express sur le port: ' + app.get('port'));
 });
 
 module.exports = app;

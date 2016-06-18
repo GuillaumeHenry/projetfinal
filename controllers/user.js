@@ -23,7 +23,7 @@ exports.loginGet = function(req, res) {
     return res.redirect('/');
   }
   res.render('account/login', {
-    title: 'Log in'
+    title: 'Connexion'
   });
 };
 
@@ -31,9 +31,9 @@ exports.loginGet = function(req, res) {
  * POST /login
  */
 exports.loginPost = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('email', 'Email cannot be blank').notEmpty();
-  req.assert('password', 'Password cannot be blank').notEmpty();
+  req.assert('email', 'l\' email n\'est pas valide').isEmail();
+  req.assert('email', 'l\' email ne peut être vide').notEmpty();
+  req.assert('password', 'Le mot de passe ne peut être vide').notEmpty();
   req.sanitize('email').normalizeEmail({ remove_dots: false });
 
   var errors = req.validationErrors();
@@ -49,7 +49,7 @@ exports.loginPost = function(req, res, next) {
       return res.redirect('/login')
     }
     req.logIn(user, function(err) {
-      res.redirect('/');
+      res.redirect('/account');
     });
   })(req, res, next);
 };
@@ -70,7 +70,7 @@ exports.signupGet = function(req, res) {
     return res.redirect('/');
   }
   res.render('account/signup', {
-    title: 'Sign up'
+    title: 'Inscription'
   });
 };
 
@@ -78,10 +78,10 @@ exports.signupGet = function(req, res) {
  * POST /signup
  */
 exports.signupPost = function(req, res, next) {
-  req.assert('name', 'Name cannot be blank').notEmpty();
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('email', 'Email cannot be blank').notEmpty();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('name', 'le nom ne peut être vide').notEmpty();
+  req.assert('email', 'l\' email n\'est pas valide').isEmail();
+  req.assert('email', 'l\' email ne peut être vide').notEmpty();
+  req.assert('password', 'Le mot de passe doit faire au minimum 4 caractères').len(4);
   req.sanitize('email').normalizeEmail({ remove_dots: false });
 
   var errors = req.validationErrors();
@@ -94,7 +94,7 @@ exports.signupPost = function(req, res, next) {
   
   User.findOne({ email: req.body.email }, function(err, user) {
     if (user) {
-      req.flash('error', { msg: 'The email address you have entered is already associated with another account.' });
+      req.flash('error', { msg: 'L\'adresse email que vous avez entrée est déjà associée à un autre compte.' });
       return res.redirect('/signup');
     }
     user = new User({
@@ -115,7 +115,7 @@ exports.signupPost = function(req, res, next) {
  */
 exports.accountGet = function(req, res) {
   res.render('account/profile', {
-    title: 'My Account'
+    title: 'Mon compte'
   });
 };
 
@@ -125,13 +125,15 @@ exports.accountGet = function(req, res) {
  */
 exports.accountPut = function(req, res, next) {
   if ('password' in req.body) {
-    req.assert('password', 'Password must be at least 4 characters long').len(4);
-    req.assert('confirm', 'Passwords must match').equals(req.body.password);
+    req.assert('password', 'Le mot de passe doit contenir au moins 4 caractères').len(4);
+    req.assert('confirm', 'Les mots de passe doivent correspondre').equals(req.body.password);
   } else {
-    req.assert('email', 'Email is not valid').isEmail();
-    req.assert('email', 'Email cannot be blank').notEmpty();
+    req.assert('email', 'L\'email n\'est pas valide').isEmail();
+    req.assert('email', 'Le champ email doit être rempli').notEmpty();
     req.sanitize('email').normalizeEmail({ remove_dots: false });
   }
+
+
 
   var errors = req.validationErrors();
 
@@ -154,14 +156,15 @@ exports.accountPut = function(req, res, next) {
       user.website = req.body.website;
       user.photo = req.body.photo;
       user.presentation = req.body.presentation;
+      console.log(req.files);
     }
     user.save(function(err) {
       if ('password' in req.body) {
-        req.flash('success', { msg: 'Your password has been changed.' });
+        req.flash('success', { msg: 'Votre mot de passe a été changé.' });
       } else if (err && err.code === 11000) {
-        req.flash('error', { msg: 'The email address you have entered is already associated with another account.' });
+        req.flash('error', { msg: 'L\'adresse mail correspond déjà à une adresse existante .' });
       } else {
-        req.flash('success', { msg: 'Your profile information has been updated.' });
+        req.flash('success', { msg: 'Vos informations ont été mises à jour.' });
       }
       res.redirect('/account');
     });
@@ -174,7 +177,7 @@ exports.accountPut = function(req, res, next) {
 exports.accountDelete = function(req, res, next) {
   User.remove({ _id: req.user.id }, function(err) {
     req.logout();
-    req.flash('info', { msg: 'Your account has been permanently deleted.' });
+    req.flash('info', { msg: 'Votre compte a été supprimé définitivement.' });
     res.redirect('/');
   });
 };
@@ -202,7 +205,7 @@ exports.unlink = function(req, res, next) {
         return res.redirect('/account');
     }
     user.save(function(err) {
-      req.flash('success', { msg: 'Your account has been unlinked.' });
+      req.flash('success', { msg: 'Votre compte a été détaché.' });
       res.redirect('/account');
     });
   });
@@ -216,7 +219,7 @@ exports.forgotGet = function(req, res) {
     return res.redirect('/');
   }
   res.render('account/forgot', {
-    title: 'Forgot Password'
+    title: 'Mot de passe perdu'
   });
 };
 
@@ -224,8 +227,8 @@ exports.forgotGet = function(req, res) {
  * POST /forgot
  */
 exports.forgotPost = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('email', 'Email cannot be blank').notEmpty();
+  req.assert('email', 'L\'email n\'est pas valide').isEmail();
+  req.assert('email', 'L\'email doit être précisé').notEmpty();
   req.sanitize('email').normalizeEmail({ remove_dots: false });
 
   var errors = req.validationErrors();
@@ -245,7 +248,7 @@ exports.forgotPost = function(req, res, next) {
     function(token, done) {
       User.findOne({ email: req.body.email }, function(err, user) {
         if (!user) {
-          req.flash('error', { msg: 'The email address ' + req.body.email + ' is not associated with any account.' });
+          req.flash('error', { msg: 'L\'adresse mail ' + req.body.email + ' n\'est associée à aucun compte.' });
           return res.redirect('/forgot');
         }
         user.passwordResetToken = token;
@@ -265,15 +268,15 @@ exports.forgotPost = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'support@yourdomain.com',
-        subject: '✔ Reset your password on Mega Boilerplate',
-        text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+        from: 'henry_guillaume@hotmail.fr',
+        subject: '✔ Changement de mot de passe',
+        text: 'Vous recevez cet email car vous (ou quelqu\'un d\'autre) avez demandé de changer votre mot de passe.\n\n' +
+        'Cliquer sur le lien suivant pour changer votre mot de passe:\n\n' +
         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+        'Si vous n\'avez pas fait cette demande, ignorer ce message, votre mot de passe reste inchangé.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        req.flash('info', { msg: 'An email has been sent to ' + user.email + ' with further instructions.' });
+        req.flash('info', { msg: 'Un email a été envoyé à ' + user.email + ' avec plus d\'informations.' });
         res.redirect('/forgot');
       });
     }
@@ -295,7 +298,7 @@ exports.resetGet = function(req, res) {
         return res.redirect('/forgot');
       }
       res.render('account/reset', {
-        title: 'Password Reset'
+        title: 'Réinitialisation du mot de passe'
       });
     });
 };
@@ -304,8 +307,8 @@ exports.resetGet = function(req, res) {
  * POST /reset
  */
 exports.resetPost = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirm', 'Passwords must match').equals(req.body.password);
+  req.assert('password', 'Le mot de passe doit faire au moins 4 caractères').len(4);
+  req.assert('confirm', 'Les mots de passe doivent correspondre').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -342,14 +345,14 @@ exports.resetPost = function(req, res, next) {
         }
       });
       var mailOptions = {
-        from: 'support@yourdomain.com',
+        from: 'henry_guillaume@hotmail.fr',
         to: user.email,
-        subject: 'Your Mega Boilerplate password has been changed',
+        subject: 'Changement de mot de passe',
         text: 'Hello,\n\n' +
-        'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+        'Ceci est un message de confirmation pour votre compte ' + user.email + ' qui vient d\'être changé.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        req.flash('success', { msg: 'Your password has been changed successfully.' });
+        req.flash('success', { msg: 'Votre mot de passe a bien été changé.' });
         res.redirect('/account');
       });
     }

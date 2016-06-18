@@ -21,12 +21,12 @@ passport.deserializeUser(function(id, done) {
 passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
   User.findOne({ email: email }, function(err, user) {
     if (!user) {
-      return done(null, false, { msg: 'The email address ' + email + ' is not associated with any account. ' +
-      'Double-check your email address and try again.' });
+      return done(null, false, { msg: 'L\'adresse mail ' + email + ' n\'est rattachée à aucun compte. ' +
+      'Veuillez consulter votre adresse mail.' });
     }
     user.comparePassword(password, function(err, isMatch) {
       if (!isMatch) {
-        return done(null, false, { msg: 'Invalid email or password' });
+        return done(null, false, { msg: 'L\'email ou le mot de passe ne correspondent pas' });
       }
       return done(null, user);
     });
@@ -44,7 +44,7 @@ passport.use(new FacebookStrategy({
   if (req.user) {
     User.findOne({ facebook: profile.id }, function(err, user) {
       if (user) {
-        req.flash('error', { msg: 'There is already an existing account linked with Facebook that belongs to you.' });
+        req.flash('error', { msg: 'Il existe déjà un compte Facebook lié à votre compte.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -53,7 +53,7 @@ passport.use(new FacebookStrategy({
           user.picture = user.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
           user.facebook = profile.id;
           user.save(function(err) {
-            req.flash('success', { msg: 'Your Facebook account has been linked.' });
+            req.flash('success', { msg: 'Votre compte facebook a été rattaché.' });
             done(err, user);
           });
         });
@@ -66,7 +66,7 @@ passport.use(new FacebookStrategy({
       }
       User.findOne({ email: profile._json.email }, function(err, user) {
         if (user) {
-          req.flash('error', { msg: user.email + ' is already associated with another account.' });
+          req.flash('error', { msg: user.email + ' est déjà associée à un autre compte.' });
           done(err);
         } else {
           var newUser = new User({
@@ -96,7 +96,7 @@ passport.use(new GoogleStrategy({
   if (req.user) {
     User.findOne({ google: profile.id }, function(err, user) {
       if (user) {
-        req.flash('error', { msg: 'There is already an existing account linked with Google that belongs to you.' });
+        req.flash('error', { msg: 'Il existe déjà un compte Google rattaché à votre compte.' });
       } else {
         User.findById(req.user.id, function(err, user) {
           user.name = user.name || profile.displayName;
@@ -104,7 +104,7 @@ passport.use(new GoogleStrategy({
           user.picture = user.picture || profile._json.image.url;
           user.google = profile.id;
           user.save(function(err) {
-            req.flash('success', { msg: 'Your Google account has been linked.' });
+            req.flash('success', { msg: 'Votre compte Google a été rattaché.' });
             done(err, user);
           });
         });
@@ -117,7 +117,7 @@ passport.use(new GoogleStrategy({
       }
       User.findOne({ email: profile.emails[0].value }, function(err, user) {
         if (user) {
-          req.flash('error', { msg: user.email + ' is already associated with another account.' });
+          req.flash('error', { msg: user.email + ' est déjà associé à un autre compte.' });
           done(err);
         } else {
           var newUser = new User({
@@ -147,7 +147,7 @@ passport.use(new TwitterStrategy({
   if (req.user) {
     User.findOne({ twitter: profile.id }, function(err, user) {
       if (user) {
-        req.flash('error', { msg: 'There is already an existing account linked with Twitter that belongs to you.' });
+        req.flash('error', { msg: 'Il existe déjà un compte Twitter lié à votre compte.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -156,7 +156,7 @@ passport.use(new TwitterStrategy({
           user.picture = user.picture || profile._json.profile_image_url_https;
           user.twitter = profile.id;
           user.save(function(err) {
-            req.flash('success', { msg: 'Your Twitter account has been linked.' });
+            req.flash('success', { msg: 'Votre compte twitter a été rattaché.' });
             done(err, user);
           });
         });

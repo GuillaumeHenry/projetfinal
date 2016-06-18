@@ -11,11 +11,14 @@ var schemaOptions = {
 
 var userSchema = new mongoose.Schema({
   name: String,
+  prenom: String,
+  pseudo: String,
   email: { type: String, unique: true},
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
   gender: String,
+  age: Number,
   location: String,
   website: String,
   picture: String,

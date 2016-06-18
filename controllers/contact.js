@@ -20,10 +20,10 @@ exports.contactGet = function(req, res) {
  * POST /contact
  */
 exports.contactPost = function(req, res) {
-  req.assert('name', 'Name cannot be blank').notEmpty();
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('email', 'Email cannot be blank').notEmpty();
-  req.assert('message', 'Message cannot be blank').notEmpty();
+  req.assert('name', 'Le nom doit être précisé').notEmpty();
+  req.assert('email', 'L\'adresse mail n\'est pas valide').isEmail();
+  req.assert('email', 'L\'email doit être précisé').notEmpty();
+  req.assert('message', 'Le message ne peut être vierge').notEmpty();
   req.sanitize('email').normalizeEmail({ remove_dots: false });
 
   var errors = req.validationErrors();
@@ -36,12 +36,12 @@ exports.contactPost = function(req, res) {
   var mailOptions = {
     from: req.body.name + ' ' + '<'+ req.body.email + '>',
     to: 'billyzob@msn.com',
-    subject: '✔ Contact Form | Mega Boilerplate',
+    subject: '✔ Formulaire de contact',
     text: req.body.message
   };
 
   transporter.sendMail(mailOptions, function(err) {
-    req.flash('success', { msg: 'Thank you! Your feedback has been submitted.' });
+    req.flash('success', { msg: 'Merci! Votre message a bien été transmis.' });
     res.redirect('/contact');
   });
 };
