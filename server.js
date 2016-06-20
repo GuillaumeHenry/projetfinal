@@ -10,6 +10,8 @@ var expressValidator = require('express-validator');
 var dotenv = require('dotenv');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var multer = require('multer');
+var upload = multer({dest:'uploads/'});
 
 // Load environment variables from .env file
 dotenv.load();
@@ -54,6 +56,7 @@ app.get('/contact', contactController.contactGet);
 app.post('/contact', contactController.contactPost);
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
+app.post('/upload', upload.single('photo'), userController.uploadPost);
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);
 app.get('/signup', userController.signupGet);
 app.post('/signup', userController.signupPost);

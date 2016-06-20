@@ -4,6 +4,7 @@ var nodemailer = require('nodemailer');
 var passport = require('passport');
 var User = require('../models/User');
 
+
 /**
  * Login required middleware
  */
@@ -156,7 +157,6 @@ exports.accountPut = function(req, res, next) {
       user.website = req.body.website;
       user.photo = req.body.photo;
       user.presentation = req.body.presentation;
-      console.log(req.files);
     }
     user.save(function(err) {
       if ('password' in req.body) {
@@ -168,6 +168,28 @@ exports.accountPut = function(req, res, next) {
       }
       res.redirect('/account');
     });
+  });
+};
+
+/**
+ * POST /upload
+ */
+
+exports.uploadPost= function (req, res, next) {
+
+  User.findById(req.user.id, function (err, user) {
+    if (err) {
+      res.redirect('/account');
+    } else {
+      if ('originalname' in req.file) {
+        user.photo = req.file.originalname;
+        console.log(user.photo);
+      }
+      user.save(function () {
+        req.flash('success', {msg: 'Votre image a bien été chargée.'});
+        res.redirect('/account');
+      });
+    };
   });
 };
 
@@ -277,7 +299,7 @@ exports.forgotPost = function(req, res, next) {
       };
       transporter.sendMail(mailOptions, function(err) {
         req.flash('info', { msg: 'Un email a été envoyé à ' + user.email + ' avec plus d\'informations.' });
-        res.redirect('/forgot');
+        res.redirect('/');
       });
     }
   ]);
@@ -294,7 +316,7 @@ exports.resetGet = function(req, res) {
     .where('passwordResetExpires').gt(Date.now())
     .exec(function(err, user) {
       if (!user) {
-        req.flash('error', { msg: 'Password reset token is invalid or has expired.' });
+        req.flash('error', { msg: 'Le lien de réinitialisation du mot de passe est invalide ou a expiré.' });
         return res.redirect('/forgot');
       }
       res.render('account/reset', {
@@ -323,7 +345,7 @@ exports.resetPost = function(req, res, next) {
         .where('passwordResetExpires').gt(Date.now())
         .exec(function(err, user) {
           if (!user) {
-            req.flash('error', { msg: 'Password reset token is invalid or has expired.' });
+            req.flash('error', { msg: 'Le lien de réinitialisation du mot de passe est invalide ou a expiré.' });
             return res.redirect('back');
           }
           user.password = req.body.password;
@@ -348,8 +370,8 @@ exports.resetPost = function(req, res, next) {
         from: 'henry_guillaume@hotmail.fr',
         to: user.email,
         subject: 'Changement de mot de passe',
-        text: 'Hello,\n\n' +
-        'Ceci est un message de confirmation pour votre compte ' + user.email + ' qui vient d\'être changé.\n'
+        text: 'Bonjour,\n\n' +
+        'Ceci est un message de confirmation pour votre compte ' + user.email + ' dont le mot de passe vient d\'être changé.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
         req.flash('success', { msg: 'Votre mot de passe a bien été changé.' });
