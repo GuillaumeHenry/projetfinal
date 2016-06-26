@@ -8,7 +8,7 @@ var flash = require('express-flash');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var dotenv = require('dotenv');
-dotenv.config({silent:true});
+dotenv.config({silent:true, path: 'home/WebstormProjects/megaboilerplate/.env'});
 var mongoose = require('mongoose');
 var passport = require('passport');
 var multer = require('multer');
