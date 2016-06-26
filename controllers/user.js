@@ -155,7 +155,6 @@ exports.accountPut = function(req, res, next) {
       user.age = req.body.age;
       user.location = req.body.location;
       user.website = req.body.website;
-      user.photo = req.body.photo;
       user.presentation = req.body.presentation;
     }
     user.save(function(err) {
@@ -182,8 +181,8 @@ exports.uploadPost= function (req, res, next) {
       res.redirect('/account');
     } else {
       if ('originalname' in req.file) {
-        user.photo = req.file.originalname;
-        console.log(user.photo);
+        user.photo = req.file.filename;
+        console.log(req.file.filename);
       }
       user.save(function () {
         req.flash('success', {msg: 'Votre image a bien été chargée.'});

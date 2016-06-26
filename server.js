@@ -11,27 +11,34 @@ var dotenv = require('dotenv');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var multer = require('multer');
-var upload = multer({dest:'uploads/'});
-
+var upload = multer({dest:'public/uploads/'});
 // Load environment variables from .env file
 dotenv.load();
 
 // Controllers
 var HomeController = require('./controllers/home');
+
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
-
+var socketController = require('./controllers/socket');
 // Passport OAuth strategies
 require('./config/passport');
 
 var app = express();
+var http = require('http').Server(app);
 
+var io = require('socket.io')(http);
+
+io.on('connection', function(socket){
+  console.log(socket);
+});
 
 mongoose.connect(process.env.MONGODB);
 mongoose.connection.on('error', function() {
   console.log('Problème de connexion à Mongo. Assurez vous que MongoDB est bien démarré.');
   process.exit(1);
 });
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set('port', process.env.PORT || 3000);
@@ -86,5 +93,7 @@ if (app.get('env') === 'production') {
 app.listen(app.get('port'), function() {
   console.log('Ecoute du serveur express sur le port: ' + app.get('port'));
 });
+
+
 
 module.exports = app;

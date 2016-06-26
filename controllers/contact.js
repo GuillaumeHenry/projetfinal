@@ -35,7 +35,7 @@ exports.contactPost = function(req, res) {
 
   var mailOptions = {
     from: req.body.name + ' ' + '<'+ req.body.email + '>',
-    to: 'billyzob@msn.com',
+    to: 'guipsiguips@gmail.com',
     subject: '✔ Formulaire de contact',
     text: req.body.message
   };
