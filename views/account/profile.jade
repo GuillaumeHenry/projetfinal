@@ -52,14 +52,15 @@ block content
             label.col-sm-3(for='website') Site internet
             .col-sm-7
               input.form-control(type='text', name='website', id='website', value=user.website)
-          .form-group
-            label.col-sm-3 
-            .col-sm-4
-              img(src= '/uploads/' + user.photo + '.jpeg', class='profile')
+          if user.photo
+            .form-group
+              label.col-sm-3
+              .col-sm-4
+                img(src= '/uploads/' + user.photo, class='profile', width="100", height="100")
           .form-group
             .col-sm-offset-3.col-sm-4
               button.btn.btn-success(type='submit') Mettre à jour
-
+        br
         form.form-horizontal(enctype="multipart/form-data", method='POST', action='/upload')
           .form-group
             label.col-sm-3 Photo

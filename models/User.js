@@ -46,14 +46,8 @@ userSchema.methods.comparePassword = function(password, cb) {
   });
 };
 
-userSchema.virtual('gravatar').get(function() {
-  if (!this.get('email')) {
-    return 'https://gravatar.com/avatar/?s=200&d=retro';
-  }
-  var md5 = crypto.createHash('md5').update(this.get('email')).digest('hex');
-  return 'https://gravatar.com/avatar/' + md5 + '?s=200&d=retro';
-});
-
 var User = mongoose.model('User', userSchema);
+
+
 
 module.exports = User;

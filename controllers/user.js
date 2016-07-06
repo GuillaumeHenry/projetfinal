@@ -4,6 +4,15 @@ var nodemailer = require('nodemailer');
 var passport = require('passport');
 var User = require('../models/User');
 
+var membres = [];
+
+User.find(function (err, users) {
+  if (err) return console.error(err);
+  users.forEach(function(user) {
+    membres.push(user);
+  });
+});
+
 
 /**
  * Login required middleware
@@ -14,6 +23,61 @@ exports.ensureAuthenticated = function(req, res, next) {
   } else {
     res.redirect('/login');
   }
+};
+
+
+/**
+ * POST /recherche utilisateur
+ */
+
+exports.rechercheUtilisateur = function(req, res, next) {
+
+  User.find({pseudo:req.params.membre}, function (err, user) {
+    if(err) return console.error(err);
+    //console.log(user[0].pseudo);
+    res.render('/', {
+      title : 'Profil de '  + req.params.membre,
+      membres : user[0]
+    });
+  });
+}
+
+/**
+ * GET /membres
+ */
+
+exports.membreGet = function (req, res) {
+  User.find({pseudo:req.params.membre}, function (err, user) {
+    if(err) return console.error(err);
+    //console.log(user[0].pseudo);
+    res.render('account/membre', {
+      title : 'Profil de '  + req.params.membre,
+      membres : user[0]
+    });
+  });
+};
+
+exports.membrePost = function (req,res) {
+  User.find({pseudo:req.params.membre}, function (err, user) {
+    if (err) return console.error(err);
+    res.render('account/amis', {
+      title: 'Demande d\' ami',
+      membres: user[0]
+    });
+  });
+}
+
+/**
+ * GET /amis
+ */
+exports.amisGet = function(req, res) {
+  User.find({pseudo:req.params.membre}, function (err, user) {
+    if (err) return console.error(err);
+    res.render('account/amis', {
+      title: 'Amis',
+      membres: user[0]
+    });
+  });
 };
 
 /**
@@ -50,9 +114,10 @@ exports.loginPost = function(req, res, next) {
       return res.redirect('/login')
     }
     req.logIn(user, function(err) {
-      res.redirect('/account');
+      res.redirect('/');
     });
   })(req, res, next);
+
 };
 
 /**
@@ -103,12 +168,31 @@ exports.signupPost = function(req, res, next) {
       email: req.body.email,
       password: req.body.password
     });
+    var transporter = nodemailer.createTransport({
+      service: 'Mailgun',
+      auth: {
+        user: process.env.MAILGUN_USERNAME,
+        pass: process.env.MAILGUN_PASSWORD
+      }
+    });
+    var mailOptions = {
+      from:'guipsiguips@gmail.com',
+      to: req.body.email,
+      subject: 'vous êtes bien inscrit',
+      text: 'Votre compte a bien été créé nous vous invitons à vous connecter'
+    };
+
+
     user.save(function(err) {
       req.logIn(user, function(err) {
-        res.redirect('/');
+        res.redirect('/account');
       });
     });
+    transporter.sendMail(mailOptions, function(err) {
+      req.flash('success', { msg: 'Merci! Votre message a bien été transmis.' });
+    });
   });
+
 };
 
 /**
@@ -133,9 +217,7 @@ exports.accountPut = function(req, res, next) {
     req.assert('email', 'Le champ email doit être rempli').notEmpty();
     req.sanitize('email').normalizeEmail({ remove_dots: false });
   }
-
-
-
+  
   var errors = req.validationErrors();
 
   if (errors) {
@@ -156,6 +238,7 @@ exports.accountPut = function(req, res, next) {
       user.location = req.body.location;
       user.website = req.body.website;
       user.presentation = req.body.presentation;
+      user.amis = {};
     }
     user.save(function(err) {
       if ('password' in req.body) {
@@ -175,7 +258,6 @@ exports.accountPut = function(req, res, next) {
  */
 
 exports.uploadPost= function (req, res, next) {
-
   User.findById(req.user.id, function (err, user) {
     if (err) {
       res.redirect('/account');

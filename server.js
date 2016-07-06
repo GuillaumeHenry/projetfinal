@@ -8,31 +8,32 @@ var flash = require('express-flash');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var dotenv = require('dotenv');
-dotenv.config({silent:true, path: 'home/WebstormProjects/megaboilerplate/.env'});
+dotenv.config({silent:true, path: __dirname + '.env'});
 var mongoose = require('mongoose');
 var passport = require('passport');
 var multer = require('multer');
 var upload = multer({dest:'public/uploads/'});
+var User = require('./models/User');
+
+
 // Load environment variables from .env file
 dotenv.load();
 
 // Controllers
 var HomeController = require('./controllers/home');
-
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
-var socketController = require('./controllers/socket');
+var chatController = require('./controllers/chat');
+//var socketController = require('./controllers/socket');
+
 // Passport OAuth strategies
 require('./config/passport');
 
 var app = express();
-var http = require('http').Server(app);
 
-var io = require('socket.io')(http);
+var server = require('http').Server(app);
+var io = require('socket.io').listen(server);
 
-io.on('connection', function(socket){
-  console.log(socket);
-});
 
 mongoose.connect(process.env.MONGODB);
 mongoose.connection.on('error', function() {
@@ -60,6 +61,11 @@ app.use(function(req, res, next) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', HomeController.index);
+app.get('/chat', userController.ensureAuthenticated, chatController.chatGet);
+app.get('/amis', userController.ensureAuthenticated, userController.amisGet);
+app.post('/rechercheUtilisateur', userController.ensureAuthenticated, userController.rechercheUtilisateur);
+app.get('/account/:membre', userController.ensureAuthenticated, userController.membreGet);
+app.post('/account/:membre', userController.ensureAuthenticated, userController.membrePost);
 app.get('/contact', contactController.contactGet);
 app.post('/contact', contactController.contactPost);
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
@@ -91,10 +97,80 @@ if (app.get('env') === 'production') {
   });
 }
 
-app.listen(app.get('port'), function() {
-  console.log('Ecoute du serveur express sur le port: ' + app.get('port'));
+var numUsers = 0;
+
+io.on('connection', function (socket) {
+  var addedUser = false;
+
+  //Recherche utilisateur
+  socket.on('envoi utilisateur', function (data) {
+    console.log(data.user);
+    User.find({$or:[{pseudo : data.user}, {name: data.user},{prenom : data.user}]}, function (err, user) {
+      if (err) return console.error(err);
+      console.log(user);
+    });
+  });
+
+  //Demande d'ajout d'ami
+
+
+  // when the client emits 'new message', this listens and executes
+  socket.on('new message', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.emit('new message', {
+      username: socket.username,
+      message: data
+    });
+  });
+
+  // when the client emits 'add user', this listens and executes
+  socket.on('add user', function (username) {
+    if (addedUser) return;
+
+    // we store the username in the socket session for this client
+    socket.username = username;
+    ++numUsers;
+    addedUser = true;
+    socket.emit('login', {
+      numUsers: numUsers
+    });
+    // echo globally (all clients) that a person has connected
+    socket.broadcast.emit('user joined', {
+      username: socket.username,
+      numUsers: numUsers
+    });
+  });
+
+  // when the client emits 'typing', we broadcast it to others
+  socket.on('typing', function () {
+    socket.broadcast.emit('typing', {
+      username: socket.username
+    });
+  });
+
+  // when the client emits 'stop typing', we broadcast it to others
+  socket.on('stop typing', function () {
+    socket.broadcast.emit('stop typing', {
+      username: socket.username
+    });
+  });
+
+  // when the user disconnects.. perform this
+  socket.on('disconnect', function () {
+    if (addedUser) {
+      --numUsers;
+
+      // echo globally that this client has left
+      socket.broadcast.emit('user left', {
+        username: socket.username,
+        numUsers: numUsers
+      });
+    }
+  });
 });
 
-
+server.listen(app.get('port'), function() {
+  console.log('Ecoute du serveur express sur le port: ' + app.get('port'));
+});
 
 module.exports = app;

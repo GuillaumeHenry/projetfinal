@@ -6,21 +6,23 @@ nav.navbar.navbar-default.navbar-static-top
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href='/') Face de bouc
+      a.navbar-brand(href='/') Réseau social
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav
         li(class=(title == 'Home') ? 'active' : null)
           a(href='/') Accueil
         li(class=(title == 'Contact') ? 'active' : null)
           a(href='/contact') Contact
+        if user
+          li(class=(title == 'Amis') ? 'active' : null)
+            a(href='/amis') Amis
       ul.nav.navbar-nav.navbar-right
         if user
           li.dropdown
             a.navbar-avatar.dropdown-toggle(href='#', data-toggle='dropdown')
-              if user.picture
-                img(src=user.picture)
+              if user.photo
+                img(src='/uploads/' + user.photo)
               else
-                img(src=user.gravatar)
               | <span> #{user.pseudo || user.name || user.email || user.id} </span>
               i.caret
             ul.dropdown-menu
