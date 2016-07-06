@@ -171,7 +171,7 @@ passport.use(new TwitterStrategy({
       // We can "fake" a Twitter email address as follows: username@twitter.com.
       // Ideally, it should be changed by a user to their real email address afterwards.
       // For example, after login, check if email contains @twitter.com, then redirect to My Account page,
-      // and restrict user's page navigation until they update their email address. 
+      // and restrict user's page navigation until they update their email address.
       var newUser = new User({
         name: profile.displayName,
         email: profile.username + '@twitter.com',

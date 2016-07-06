@@ -1,3 +1,7 @@
+console.log(process.env.NODE_ENV)
+if ((process.env.NODE_ENV || 'development') === 'development') {
+  require('dotenv').load();
+}
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -7,17 +11,12 @@ var session = require('express-session');
 var flash = require('express-flash');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-var dotenv = require('dotenv');
-dotenv.config({silent:true, path: __dirname + '.env'});
 var mongoose = require('mongoose');
 var passport = require('passport');
 var multer = require('multer');
 var upload = multer({dest:'public/uploads/'});
 var User = require('./models/User');
 
-
-// Load environment variables from .env file
-dotenv.load();
 
 // Controllers
 var HomeController = require('./controllers/home');
@@ -89,6 +88,8 @@ app.get('/auth/google/callback', passport.authenticate('google', { successRedire
 app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/login' }));
 
+//Developpement environment
+
 // Production error handler
 if (app.get('env') === 'production') {
   app.use(function(err, req, res, next) {
@@ -96,6 +97,8 @@ if (app.get('env') === 'production') {
     res.sendStatus(err.status || 500);
   });
 }
+
+
 
 var numUsers = 0;
 
