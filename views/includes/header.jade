@@ -14,8 +14,11 @@ nav.navbar.navbar-default.navbar-static-top
         li(class=(title == 'Contact') ? 'active' : null)
           a(href='/contact') Contact
         if user
-          li(class=(title == 'Amis') ? 'active' : null)
-            a(href='/amis') Amis
+          li(class=(title == 'Chat') ? 'active' : null)
+            a(href='/chat') Chat
+          if user
+            li(class=(title == 'Wall') ? 'active' : null)
+              a(href='/wall') Wall
       ul.nav.navbar-nav.navbar-right
         if user
           li.dropdown

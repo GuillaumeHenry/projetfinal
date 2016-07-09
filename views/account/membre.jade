@@ -8,5 +8,10 @@ block content
           small=membres.prenom + ' ' + membres.name
         img(src="/uploads/" + membres.photo, width=200, height="150")
       .col-md-12
-        form(action="/account/" + membres.pseudo, method="post")
+        form(action="/account/" + membres.pseudo + '?_method=PUT', method="post")
           input#ajout_ami.btn.btn-large.btn-success(type="submit", value="Ajouter un ami", data-toggle='confirmation', data-original-title='', title='Bêêêê')
+      .col-md-12
+        form#messageWall(action="/wall", method="post")
+          span Envoyer un message à l'utilisateur:
+          input#messageWallInput(type="text", name = "messageWall")
+

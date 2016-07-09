@@ -14,18 +14,25 @@ block content
       .alert.alert-info(role='alert')
         for info in messages.info
           div= info.msg
-  .panel.panel-defaultl
-    .panel-heading
-      .col-md-12.text-right
-        if user
-          form#rechercheUtilisateur(action="", method="post")
+
+    if user
+      .row
+        form#rechercheUtilisateur(action="", method="post")
+          .col-md-6
             span Rechercher un utilisateur:
+          .col-md-6
             input(type="text", class="search", name="search")
-    .panel-body
+  .container-fluid
+    .row
+      .col-md-12
+        ul
+          li#messages
+  .container-fluid
+    ul
       each membre in membres
-        .col-md-12.text-center
+        li
           a(href="/account/" + membre.pseudo)
-            h1=membre.pseudo
-            img.img-circle(src='/uploads/' + membre.photo, width="200", height="150")
-        .col-md-12.text-center
-          a.btn.btn-large.btn-success(data-toggle='confirmation', data-original-title='', title='Bêêêê', href='/account/' + membre.pseudo) Ajouter un ami
+            img(src='/uploads/' + membre.photo, width="50", height="50")
+            p(style="display:inline")=membre.pseudo
+            #connecte
+            #deconnecte

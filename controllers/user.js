@@ -13,7 +13,6 @@ User.find(function (err, users) {
   });
 });
 
-
 /**
  * Login required middleware
  */
@@ -57,6 +56,9 @@ exports.membreGet = function (req, res) {
   });
 };
 
+/**
+ * POST /membres
+ */
 exports.membrePost = function (req,res) {
   User.find({pseudo:req.params.membre}, function (err, user) {
     if (err) return console.error(err);
@@ -68,6 +70,26 @@ exports.membrePost = function (req,res) {
 }
 
 /**
+ * GET /well
+ */
+exports.wallGet = function (req, res) {
+  res.render('account/wall', {
+    bob: 'le gobe'
+  });
+};
+
+/**
+ * POST /well
+ */
+exports.wallPost = function (req, res) {
+  User.find(req.user.id, function (err, user) {
+    res.render('account/wall', {
+      user: user
+    });
+  });
+};
+
+/**
  * GET /amis
  */
 exports.amisGet = function(req, res) {
@@ -77,6 +99,21 @@ exports.amisGet = function(req, res) {
       title: 'Amis',
       membres: user[0]
     });
+  });
+};
+
+/**
+ * PUT /amis
+ */
+
+exports.amisPut = function (req,res) {
+  User.findById(req.user.id, function(err, user) {
+    if (err) return console.error(err);
+    for (var i=0; i<user.amis.length; i++) {
+      if (user.amis[i] != req.params.membre) {
+        user.amis.push(req.params.membre);
+      }
+    }
   });
 };
 
@@ -114,7 +151,7 @@ exports.loginPost = function(req, res, next) {
       return res.redirect('/login')
     }
     req.logIn(user, function(err) {
-      res.redirect('/');
+      res.redirect('/wall');
     });
   })(req, res, next);
 
@@ -176,7 +213,7 @@ exports.signupPost = function(req, res, next) {
       }
     });
     var mailOptions = {
-      from:'guipsiguips@gmail.com',
+      from:'henry_guillaume@hotmail.fr',
       to: req.body.email,
       subject: 'vous êtes bien inscrit',
       text: 'Votre compte a bien été créé nous vous invitons à vous connecter'
@@ -238,7 +275,6 @@ exports.accountPut = function(req, res, next) {
       user.location = req.body.location;
       user.website = req.body.website;
       user.presentation = req.body.presentation;
-      user.amis = {};
     }
     user.save(function(err) {
       if ('password' in req.body) {

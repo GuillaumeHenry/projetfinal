@@ -64,8 +64,11 @@ app.get('/amis', userController.ensureAuthenticated, userController.amisGet);
 app.post('/rechercheUtilisateur', userController.ensureAuthenticated, userController.rechercheUtilisateur);
 app.get('/account/:membre', userController.ensureAuthenticated, userController.membreGet);
 app.post('/account/:membre', userController.ensureAuthenticated, userController.membrePost);
+app.put('/account/:membre', userController.ensureAuthenticated, userController.amisPut);
 app.get('/contact', contactController.contactGet);
 app.post('/contact', contactController.contactPost);
+app.get('/wall', userController.ensureAuthenticated, userController.wallGet);
+app.post('/wall', userController.ensureAuthenticated, userController.wallPost)
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.post('/upload', upload.single('photo'), userController.uploadPost);
@@ -97,25 +100,21 @@ if (app.get('env') === 'production') {
   });
 }
 
-
-
 var numUsers = 0;
 
 io.on('connection', function (socket) {
   var addedUser = false;
-
-  //Recherche utilisateur
-  socket.on('envoi utilisateur', function (data) {
-    console.log(data.user);
-    User.find({$or:[{pseudo : data.user}, {name: data.user},{prenom : data.user}]}, function (err, user) {
-      if (err) return console.error(err);
-      console.log(user);
-    });
+  socket.on('message mur', function (data) {
+    socket.broadcast.emit('nouveau message', {message:data});
+  })
+  socket.emit('connecteOuPas');
+  
+  socket.emit('connecte', {connecte:true});
+  
+  socket.on('ami ?', function () {
+    socket.broadcast.emit('voulez vous', {question:'Vous avez reçu une demande de contact de'});
   });
-
-  //Demande d'ajout d'ami
-
-
+  
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
@@ -168,6 +167,7 @@ io.on('connection', function (socket) {
         numUsers: numUsers
       });
     }
+    socket.emit('deco', {connecte:false});
   });
 });
 

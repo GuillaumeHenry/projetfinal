@@ -388,3 +388,19 @@ ul {
   right: 0;
   width: 100%;
 }
+
+/*boutons connecté et déco */
+#connecte {
+  width:10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 10px;
+  display:inline-block;
+}
+#deconnecte {
+  width:10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 10px;
+  display:inline-block;
+}

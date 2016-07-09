@@ -1,8 +1,7 @@
 var User = require('../models/User');
 
-var membres = [];
 /**
- * GET /
+ * GET /chat
  */
 exports.chatGet = function(req, res) {
     User.findOne({email:req.body.email}, function (err, user) {
@@ -11,6 +10,4 @@ exports.chatGet = function(req, res) {
             user : user
         });
     });
-       
-    
 };

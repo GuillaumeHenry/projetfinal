@@ -25,20 +25,54 @@ $(function() {
     var $currentInput = $usernameInput.focus();
 
     var socket = io();
+    var connecte = true;
 
-
-    //recherche utilisateur
-    $('#rechercheUtilisateur').submit(function (event) {
+    //envoi message wall
+    $('#messageWall').submit(function(event) {
         event.preventDefault();
-        socket.emit('envoi utilisateur', {user: $('input').val()});
+        socket.emit('message mur', {message: $('#messageWallInput').val()});
     });
 
-    //ajouter un ami
-    var amis = [];
-    $('#ajout_ami').click(function(user){
-        socket.emit('ajout ami', {ami: user});
+    //Insertion du message chez l'autre utilisateur
+    socket.on('nouveau message', function (data) {
+        console.log(data.message.message);
+        $('#wallMessage').append(data.message.message);
+    });
+    //fonction de connexion
+    socket.on('connecte', function (data) {
+        connecte = data.connecte;
+    });
+    
+    //boutons de statut
+    var connecteOuPas = function () {
+        if (connecte) {
+            $('#deconnecte').hide();
+            $('#connecte').show();
+        } else {
+            $('#connecte').hide();
+            $('#decconnecte').show();
+        };
+    };
+
+    socket.on('connecteOuPas', function (){
+       socket.emit('ouiOuNon', connecteOuPas());
     });
 
+    //ajout ami
+    $('#ajout_ami').click(function () {
+        socket.emit('ami ?');
+    });
+    
+    //demande ami
+    socket.on('voulez vous', function (data) {
+        $('#messages').after(data.question);
+    });
+
+    //Confirmation d'amitié virtuelle
+    socket.on('ami', function (data) {
+       $('#message').text('Vous êtes maintenant connecté avec')
+    });
+    
     function addParticipantsMessage (data) {
         var message = '';
         if (data.numUsers === 1) {
@@ -55,7 +89,7 @@ $(function() {
     };
     // Sets the client's username
     function setUsername () {
-        username = cleanInput($usernameInput.val().trim());
+        username = cleanInput($usernameInput.val());
 
         // If the username is valid
         if (username) {
@@ -207,7 +241,6 @@ $(function() {
     }
 
     // Keyboard events
-
     $window.keydown(function (event) {
         // Auto-focus the current input when a key is typed
         if (!(event.ctrlKey || event.metaKey || event.altKey)) {
@@ -230,7 +263,7 @@ $(function() {
     });
 
     // Click events
-
+    
     // Focus input when clicking anywhere on login page
     $loginPage.click(function () {
         $currentInput.focus();
