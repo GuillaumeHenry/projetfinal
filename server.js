@@ -60,11 +60,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', HomeController.index);
 app.get('/chat', userController.ensureAuthenticated, chatController.chatGet);
-app.get('/amis', userController.ensureAuthenticated, userController.amisGet);
 app.post('/rechercheUtilisateur', userController.ensureAuthenticated, userController.rechercheUtilisateur);
 app.get('/account/:membre', userController.ensureAuthenticated, userController.membreGet);
-app.post('/account/:membre', userController.ensureAuthenticated, userController.membrePost);
-app.put('/account/:membre', userController.ensureAuthenticated, userController.amisPut);
+app.post('/account/:membre', userController.ensureAuthenticated, userController.amisPost);
 app.get('/contact', contactController.contactGet);
 app.post('/contact', contactController.contactPost);
 app.get('/wall', userController.ensureAuthenticated, userController.wallGet);
@@ -100,9 +98,26 @@ if (app.get('env') === 'production') {
   });
 }
 
+
+
+
 var numUsers = 0;
 
 io.on('connection', function (socket) {
+  //chat privé
+  socket.on('nouveau_client', function(pseudo) {
+    pseudo = ent.encode(pseudo);
+    socket.pseudo = pseudo;
+    socket.broadcast.emit('nouveau_client', pseudo);
+  });
+  socket.emit('pseudo', {pseudo : 'yo'  });
+  // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
+  socket.on('message', function (message) {
+    message = ent.encode(message);
+    socket.broadcast.emit('message', {pseudo: socket.pseudo, message: message});
+  });
+
+  //chat multi
   var addedUser = false;
   socket.on('message mur', function (data) {
     socket.broadcast.emit('nouveau message', {message:data});

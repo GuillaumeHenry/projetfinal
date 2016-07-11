@@ -1,7 +1,75 @@
 extends ../layout
 
 block content
-  .container
-    .row
-      .col-md-12
-        #wallMessages
+  .row
+    .col-md-12
+      form.navbar-form.navbar-right.inline-form
+        .form-group
+          input.input-sm.form-control(type='search', placeholder='Rechercher un ami')
+          button.btn.btn-primary.btn-sm(type='submit')
+            span.glyphicon.glyphicon-eye-open Rehercher
+  .container.bootstrap.snippet.col-md-6
+    .header
+      h3.text-muted.prj-name
+        span.fa.fa-users.fa-2x.principal-title
+        |         Liste d'amis
+    .jumbotron.list-content
+      ul.list-group
+        li.list-group-item.title(href='#')
+          | Amis
+        li.list-group-item.text-left(href='#')
+          each membre in membres
+            img.img-thumbnail(src='/uploads/' + membre.photo, width='150', height='75')
+            label.name
+              | #{membre.pseudo}
+              br
+            label.pull-right
+              a.btn.btn-success.btn-xs.glyphicon.glyphicon-ok(href='/account/' + membre.pseudo, title='Voir le profil')
+              a.btn.btn-danger.btn-xs.glyphicon.glyphicon-trash(href='/account/deleteFriend', title='Supprimer ami')
+              a.btn.btn-info.btn-xs.glyphicon.glyphicon.glyphicon-comment(href='/envoiMessage', title='Envoi message')
+            .break
+          hr
+  br
+  br
+  br
+  .col-md-6
+    .panel.panel-primary
+      #accordion.panel-heading
+        span.glyphicon.glyphicon-comment
+        |  Chat
+        .btn-group.pull-right
+          a.btn.btn-default.btn-xs(type='button', data-toggle='collapse', data-parent='#accordion', href='#collapseOne')
+            span.glyphicon.glyphicon-chevron-down
+      #collapseOne.panel-collapse
+        .panel-body
+          ul.chat
+            li.left.clearfix
+              span.chat-img.pull-left
+                img.img-circle(src='http://placehold.it/50/55C1E7/fff&text=U', alt='User Avatar')
+              .chat-body.clearfix
+                .header
+                  strong.primary-font=membres[0].pseudo
+                  small.pull-right.text-muted
+                    span.glyphicon.glyphicon-time
+                    | 12 mins ago
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                  | dolor, quis ullamcorper ligula sodales.
+            li.right.clearfix
+              span.chat-img.pull-right
+                img.img-circle(src='http://placehold.it/50/FA6F57/fff&text=ME', alt='User Avatar')
+              .chat-body.clearfix
+                .header
+                  small.text-muted
+                    span.glyphicon.glyphicon-time
+                    | 13 mins ago
+                  strong.pull-right.primary-font=membres[1].pseudo
+                p
+                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                  | dolor, quis ullamcorper ligula sodales.
+        .panel-footer
+          .input-group
+            input#btn-input.form-control.input-sm(type='text', placeholder='Type your message here...')
+            span.input-group-btn
+              button#btn-chat.btn.btn-warning.btn-sm
+                | Send

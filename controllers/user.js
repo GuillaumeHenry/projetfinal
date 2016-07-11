@@ -24,13 +24,10 @@ exports.ensureAuthenticated = function(req, res, next) {
   }
 };
 
-
 /**
  * POST /recherche utilisateur
  */
-
 exports.rechercheUtilisateur = function(req, res, next) {
-
   User.find({pseudo:req.params.membre}, function (err, user) {
     if(err) return console.error(err);
     //console.log(user[0].pseudo);
@@ -44,7 +41,6 @@ exports.rechercheUtilisateur = function(req, res, next) {
 /**
  * GET /membres
  */
-
 exports.membreGet = function (req, res) {
   User.find({pseudo:req.params.membre}, function (err, user) {
     if(err) return console.error(err);
@@ -70,16 +66,20 @@ exports.membrePost = function (req,res) {
 }
 
 /**
- * GET /well
+ * GET /wall
  */
 exports.wallGet = function (req, res) {
-  res.render('account/wall', {
-    bob: 'le gobe'
-  });
+  User.find(function (err, users) {
+    if (err) return console.error(err);
+    res.render('account/wall', {
+      title: 'Wall',
+      membres: users
+    });
+  })
 };
 
 /**
- * POST /well
+ * POST /wall
  */
 exports.wallPost = function (req, res) {
   User.find(req.user.id, function (err, user) {
@@ -90,30 +90,15 @@ exports.wallPost = function (req, res) {
 };
 
 /**
- * GET /amis
+ * POST /amis
  */
-exports.amisGet = function(req, res) {
-  User.find({pseudo:req.params.membre}, function (err, user) {
+exports.amisPost = function (req, res) {
+  User.findById(req.user.id, function (err, user) {
     if (err) return console.error(err);
-    res.render('account/amis', {
-      title: 'Amis',
-      membres: user[0]
+    console.log(user.amis);
+    res.render('account/wall',{
+        title : 'wall'
     });
-  });
-};
-
-/**
- * PUT /amis
- */
-
-exports.amisPut = function (req,res) {
-  User.findById(req.user.id, function(err, user) {
-    if (err) return console.error(err);
-    for (var i=0; i<user.amis.length; i++) {
-      if (user.amis[i] != req.params.membre) {
-        user.amis.push(req.params.membre);
-      }
-    }
   });
 };
 
@@ -292,7 +277,6 @@ exports.accountPut = function(req, res, next) {
 /**
  * POST /upload
  */
-
 exports.uploadPost= function (req, res, next) {
   User.findById(req.user.id, function (err, user) {
     if (err) {
@@ -300,7 +284,7 @@ exports.uploadPost= function (req, res, next) {
     } else {
       if ('originalname' in req.file) {
         user.photo = req.file.filename;
-        console.log(req.file.filename);
+        //console.log(req.file.filename);
       }
       user.save(function () {
         req.flash('success', {msg: 'Votre image a bien été chargée.'});

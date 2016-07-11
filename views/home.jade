@@ -1,6 +1,44 @@
 extends layout
 
 block content
+
+  // ========== HEADER SECTION ==========
+  section#home(name='home')
+  #headerwrap
+    .container
+      br
+      .row.text-center
+        br
+        h3 Bonjour je m'appelle Guillaume, je suis développeur Javascript Fullstack et j'ai conçu ce site pour mon projet de fin d'année.
+        br
+        br
+        .col-lg-6.col-lg-offset-3
+    // /container
+  // /headerwrap
+  // ========== ABOUT SECTION ==========
+  section#about(name='about')
+  #f
+    .container
+      .row
+        h3 A propos de moi
+        p.centered
+          i.icon.icon-circle
+          i.icon.icon-circle
+          i.icon.icon-circle
+        // INTRO INFORMATIO
+        .col-lg-6.col-lg-offset-3
+          p J'ai suivi une formation dans le but de me spécialiser dans les technologies utilisant le javascript.
+
+          p Lors de cette formation j'ai pu aborder aussi bien la partie frontend d'une application que la parte backend.
+          p
+            | Notre premier atelier a été de concevoir un jeu frontend uniquement en javascript procédural
+            a(href='http://www.cvjeuguillaumehenry.fr') Cv jeu
+
+          p Je suis à l'écoute du marché du travail. Contactez moi via la page
+
+            a(href='/contact')  Contact
+
+
   .container-fluid
     if messages.error
       .alert.alert-danger(role='alert')
@@ -15,24 +53,4 @@ block content
         for info in messages.info
           div= info.msg
 
-    if user
-      .row
-        form#rechercheUtilisateur(action="", method="post")
-          .col-md-6
-            span Rechercher un utilisateur:
-          .col-md-6
-            input(type="text", class="search", name="search")
-  .container-fluid
-    .row
-      .col-md-12
-        ul
-          li#messages
-  .container-fluid
-    ul
-      each membre in membres
-        li
-          a(href="/account/" + membre.pseudo)
-            img(src='/uploads/' + membre.photo, width="50", height="50")
-            p(style="display:inline")=membre.pseudo
-            #connecte
-            #deconnecte
+
