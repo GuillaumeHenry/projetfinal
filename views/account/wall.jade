@@ -3,9 +3,9 @@ extends ../layout
 block content
   .row
     .col-md-12
-      form.navbar-form.navbar-right.inline-form
+      form.navbar-form.navbar-right.inline-form(action="/rechercheUtilisateur" method="POST")
         .form-group
-          input.input-sm.form-control(type='search', placeholder='Rechercher un ami')
+          input.input-sm.form-control(type='search', placeholder='Rechercher un ami', name="rechercherUnAmi")
           button.btn.btn-primary.btn-sm(type='submit')
             span.glyphicon.glyphicon-eye-open Rehercher
   .container.bootstrap.snippet.col-md-6
@@ -49,24 +49,14 @@ block content
               .chat-body.clearfix
                 .header
                   strong.primary-font=membres[0].pseudo
-                  small.pull-right.text-muted
-                    span.glyphicon.glyphicon-time
-                    | 12 mins ago
-                p
-                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                  | dolor, quis ullamcorper ligula sodales.
+                p Message
             li.right.clearfix
               span.chat-img.pull-right
                 img.img-circle(src='http://placehold.it/50/FA6F57/fff&text=ME', alt='User Avatar')
               .chat-body.clearfix
                 .header
-                  small.text-muted
-                    span.glyphicon.glyphicon-time
-                    | 13 mins ago
                   strong.pull-right.primary-font=membres[1].pseudo
-                p
-                  | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                  | dolor, quis ullamcorper ligula sodales.
+                p Message
         .panel-footer
           .input-group
             input#btn-input.form-control.input-sm(type='text', placeholder='Type your message here...')

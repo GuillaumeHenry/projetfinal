@@ -104,18 +104,6 @@ if (app.get('env') === 'production') {
 var numUsers = 0;
 
 io.on('connection', function (socket) {
-  //chat privé
-  socket.on('nouveau_client', function(pseudo) {
-    pseudo = ent.encode(pseudo);
-    socket.pseudo = pseudo;
-    socket.broadcast.emit('nouveau_client', pseudo);
-  });
-  socket.emit('pseudo', {pseudo : 'yo'  });
-  // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
-  socket.on('message', function (message) {
-    message = ent.encode(message);
-    socket.broadcast.emit('message', {pseudo: socket.pseudo, message: message});
-  });
 
   //chat multi
   var addedUser = false;

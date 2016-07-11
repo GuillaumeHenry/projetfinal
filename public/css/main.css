@@ -442,11 +442,7 @@ ul {
   margin-right: 5px;
 }
 
-.panel-body
-{
-  overflow-y: scroll;
-  height: 550px;
-}
+
 
 ::-webkit-scrollbar-track
 {

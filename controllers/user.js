@@ -28,15 +28,18 @@ exports.ensureAuthenticated = function(req, res, next) {
  * POST /recherche utilisateur
  */
 exports.rechercheUtilisateur = function(req, res, next) {
-  User.find({pseudo:req.params.membre}, function (err, user) {
-    if(err) return console.error(err);
-    //console.log(user[0].pseudo);
-    res.render('/', {
-      title : 'Profil de '  + req.params.membre,
-      membres : user[0]
-    });
+  console.log(req.body.rechercherUnAmi);
+  User.find({$or:[{pseudo:req.body.rechercherUnAmi}, {name:req.body.rechercherUnAmi}, {prenom:req.body.rechercherUnAmi}]}, function (err, user) {
+    if (err) return console.error(err);
+    console.log(user.pseudo);
+    if (user.length != 0) {
+      res.redirect('/account/' + user[0].pseudo);
+    } else {
+      res.redirect('/wall');
+    }
   });
-}
+
+};
 
 /**
  * GET /membres
