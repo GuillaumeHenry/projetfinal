@@ -13,7 +13,8 @@ var expressValidator = require('express-validator');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var multer = require('multer');
-var upload = multer({dest:'public/uploads/'});
+var storage = multer.memoryStorage();
+var upload = multer({dest:'public/uploads/', storage:storage});
 var User = require('./models/User');
 
 // Controllers
