@@ -3,7 +3,6 @@ var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
 var User = require('../models/User');
-
 var membres = [];
 
 User.find(function (err, users) {
@@ -28,17 +27,14 @@ exports.ensureAuthenticated = function(req, res, next) {
  * POST /recherche utilisateur
  */
 exports.rechercheUtilisateur = function(req, res, next) {
-  console.log(req.body.rechercherUnAmi);
   User.find({$or:[{pseudo:req.body.rechercherUnAmi}, {name:req.body.rechercherUnAmi}, {prenom:req.body.rechercherUnAmi}]}, function (err, user) {
     if (err) return console.error(err);
-    console.log(user.pseudo);
     if (user.length != 0) {
       res.redirect('/account/' + user[0].pseudo);
     } else {
       res.redirect('/wall');
     }
   });
-
 };
 
 /**
@@ -78,7 +74,7 @@ exports.wallGet = function (req, res) {
       title: 'Wall',
       membres: users
     });
-  })
+  });
 };
 
 /**
@@ -86,6 +82,7 @@ exports.wallGet = function (req, res) {
  */
 exports.wallPost = function (req, res) {
   User.find(req.user.id, function (err, user) {
+    if(err) return console.error(err);
     res.render('account/wall', {
       user: user
     });
@@ -96,13 +93,18 @@ exports.wallPost = function (req, res) {
  * POST /amis
  */
 exports.amisPost = function (req, res) {
-  User.findById(req.user.id, function (err, user) {
+  var pseudo = req.params.membre;
+  var idAmi= "";
+  User.find({pseudo:pseudo}, function (err, user) {
     if (err) return console.error(err);
-    console.log(user.amis);
-    res.render('account/wall',{
-        title : 'wall'
-    });
+    idAmi = user[0]._id;
   });
+  console.log(idAmi);
+  User.requestFriend(req.user.id, idAmi);
+  res.render('account/wall',{
+      title : 'wall'
+  });
+
 };
 
 /**
@@ -139,10 +141,15 @@ exports.loginPost = function(req, res, next) {
       return res.redirect('/login')
     }
     req.logIn(user, function(err) {
+      //User.findById(req.user.id, function (err, user) {
+      //  if (err) return console.error(err);
+      //  io.on('connection', function (socket) {
+      //    socket.emit('pseudo', {pseudo:user.pseudo});
+      //  });
+      //});
       res.redirect('/wall');
     });
   })(req, res, next);
-
 };
 
 /**
@@ -182,7 +189,7 @@ exports.signupPost = function(req, res, next) {
     return res.redirect('/signup');
   }
 
-  
+
   User.findOne({ email: req.body.email }, function(err, user) {
     if (user) {
       req.flash('error', { msg: 'L\'adresse email que vous avez entrée est déjà associée à un autre compte.' });
@@ -242,7 +249,7 @@ exports.accountPut = function(req, res, next) {
     req.assert('email', 'Le champ email doit être rempli').notEmpty();
     req.sanitize('email').normalizeEmail({ remove_dots: false });
   }
-  
+
   var errors = req.validationErrors();
 
   if (errors) {

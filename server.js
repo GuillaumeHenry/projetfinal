@@ -16,7 +16,6 @@ var multer = require('multer');
 var upload = multer({dest:'public/uploads/'});
 var User = require('./models/User');
 
-
 // Controllers
 var HomeController = require('./controllers/home');
 var userController = require('./controllers/user');
@@ -104,20 +103,19 @@ if (app.get('env') === 'production') {
 var numUsers = 0;
 
 io.on('connection', function (socket) {
-
   //chat multi
   var addedUser = false;
-  socket.on('message mur', function (data) {
-    socket.broadcast.emit('nouveau message', {message:data});
-  })
-  socket.emit('connecteOuPas');
-  
-  socket.emit('connecte', {connecte:true});
-  
-  socket.on('ami ?', function () {
-    socket.broadcast.emit('voulez vous', {question:'Vous avez reçu une demande de contact de'});
-  });
-  
+  //socket.on('message mur', function (data) {
+  //  socket.broadcast.emit('nouveau message', {message:data});
+  //})
+  //socket.emit('connecteOuPas');
+
+  //socket.emit('connecte', {connecte:true});
+
+  //socket.on('ami ?', function () {
+  //  socket.broadcast.emit('voulez vous', {question:'Vous avez reçu une demande de contact de'});
+  //});
+
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
@@ -179,3 +177,5 @@ server.listen(app.get('port'), function() {
 });
 
 module.exports = app;
+exports.io = io;
+
