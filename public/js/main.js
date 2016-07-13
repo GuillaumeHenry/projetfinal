@@ -1,4 +1,11 @@
 $(function() {
+
+    //chat privé
+    $('#btn-chat').click(function () {
+       $('p').after($('#btn-input').val());
+    });
+
+
     //liste des utilisateurs
     var FADE_TIME = 150; // ms
     var TYPING_TIMER_LENGTH = 400; // ms
@@ -25,7 +32,18 @@ $(function() {
     var $currentInput = $usernameInput.focus();
 
     var socket = io();
-    
+
+
+
+    socket.on('yo', function (data) {
+       alert(data.yo);
+    });
+
+
+
+
+
+
     //chat multi
     function addParticipantsMessage (data) {
         var message = '';

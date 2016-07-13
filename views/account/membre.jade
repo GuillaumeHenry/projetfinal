@@ -8,6 +8,6 @@ block content
           small=membres.prenom + ' ' + membres.name
         img(src="/uploads/" + membres.photo, width=200, height="150")
       .col-md-12
-        form(action="/account/" + membres.pseudo, method="POST")
+        form(action="/account/" + membres.pseudo , method="POST")
           input#ajout_ami.btn.btn-large.btn-success(type="submit", value="Ajouter un ami", data-toggle='confirmation', data-original-title='', title='Bêêêê')
 

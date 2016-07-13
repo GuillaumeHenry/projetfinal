@@ -1,10 +1,16 @@
 var async = require('async');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
+var app = require('../server');
+var io = app.io;
 var passport = require('passport');
 var User = require('../models/User');
 var membres = [];
 
+//var io = app.io;
+//io.on('connection', function (socket) {
+//  socket.emit('yo', {yo:'yo'});
+//});
 User.find(function (err, users) {
   if (err) return console.error(err);
   users.forEach(function(user) {
@@ -54,15 +60,40 @@ exports.membreGet = function (req, res) {
 /**
  * POST /membres
  */
-exports.membrePost = function (req,res) {
-  User.find({pseudo:req.params.membre}, function (err, user) {
+exports.membrePost = function (req,res, next) {
+  var ami = req.params.membre;
+  User.find({pseudo:ami}, function (err, nouvelAmi) {
+    console.log('ami à ajouter: ' + nouvelAmi[0].pseudo)
     if (err) return console.error(err);
-    res.render('account/amis', {
-      title: 'Demande d\' ami',
-      membres: user[0]
+    User.find({email:req.user.email}, function (err, user) {
+      if (err) return console.error (err);
+      console.log('Utilisateur :' + user[0].pseudo )
+      // ajouter un nouvel ami
+      var ajoutAmi = user[0].amis;
+      ajoutAmi.push(nouvelAmi);
+      var transporter = nodemailer.createTransport({
+        service: 'Mailgun',
+        auth: {
+          user: process.env.MAILGUN_USERNAME,
+          pass: process.env.MAILGUN_PASSWORD
+        }
+      });
+      var mailOptions = {
+        from:user[0].email,
+        to: nouvelAmi[0].email,
+        subject: 'Demande d\'ami',
+        text: user[0].pseudo + ' souhaite devenir votre ami. \n Vous pouvez vous connecter pour répondre à sa demande: http://reseausocialguillaumehenry.herokuapp.com/login'
+      };
+      req.flash('success', { msg: 'Votre demande d\'ami a bien été envoyé à ' + nouvelAmi[0].pseudo});
+      user[0].save(function (err) {
+        res.redirect('/wall');
+      });
+      transporter.sendMail(mailOptions, function(err) {
+      });
+      console.log('amis de l\'utilisateur: ' + user[0].amis);
     });
   });
-}
+};
 
 /**
  * GET /wall
@@ -89,23 +120,7 @@ exports.wallPost = function (req, res) {
   });
 };
 
-/**
- * POST /amis
- */
-exports.amisPost = function (req, res) {
-  var pseudo = req.params.membre;
-  var idAmi= "";
-  User.find({pseudo:pseudo}, function (err, user) {
-    if (err) return console.error(err);
-    idAmi = user[0]._id;
-  });
-  console.log(idAmi);
-  User.requestFriend(req.user.id, idAmi);
-  res.render('account/wall',{
-      title : 'wall'
-  });
 
-};
 
 /**
  * GET /login

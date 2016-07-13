@@ -61,7 +61,7 @@ app.get('/', HomeController.index);
 app.get('/chat', userController.ensureAuthenticated, chatController.chatGet);
 app.post('/rechercheUtilisateur', userController.ensureAuthenticated, userController.rechercheUtilisateur);
 app.get('/account/:membre', userController.ensureAuthenticated, userController.membreGet);
-app.post('/account/:membre', userController.ensureAuthenticated, userController.amisPost);
+app.post('/account/:membre', userController.ensureAuthenticated, userController.membrePost);
 app.get('/contact', contactController.contactGet);
 app.post('/contact', contactController.contactPost);
 app.get('/wall', userController.ensureAuthenticated, userController.wallGet);
@@ -103,6 +103,12 @@ if (app.get('env') === 'production') {
 var numUsers = 0;
 
 io.on('connection', function (socket) {
+
+  //chat privé
+  socket.on('nouveau message', function (data) {
+    console.log(data.message);
+  });
+
   //chat multi
   var addedUser = false;
   //socket.on('message mur', function (data) {

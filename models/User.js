@@ -2,7 +2,7 @@ var crypto = require('crypto');
 var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
 var friends = require("mongoose-friends");
-console.log(friends);
+
 var schemaOptions = {
   timestamps: true,
   toJSON: {
@@ -50,7 +50,6 @@ userSchema.methods.comparePassword = function(password, cb) {
 };
 
 var User = mongoose.model('User', userSchema);
-
 
 
 module.exports = User;

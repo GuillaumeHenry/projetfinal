@@ -9,8 +9,7 @@ exports.index = function(req, res) {
     if (err) return console.error(err);
     res.render('home', {
       title: 'Accueil',
-      membres: users,
-      messages:['salut', 'tu', 'vas', 'bien']
+      membres: users
     });
   });
 };

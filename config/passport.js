@@ -4,7 +4,6 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 
-
 var User = require('../models/User');
 
 passport.serializeUser(function(user, done) {

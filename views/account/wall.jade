@@ -1,6 +1,19 @@
 extends ../layout
 
 block content
+  .container-fluid
+    if messages.error
+      .alert.alert-danger(role='alert')
+        for error in messages.error
+          div= error.msg
+    if messages.success
+      .alert.alert-success(role='alert')
+        for success in messages.success
+          div= success.msg
+    if messages.info
+      .alert.alert-info(role='alert')
+        for info in messages.info
+          div= info.msg
   .row
     .col-md-12
       form.navbar-form.navbar-right.inline-form(action="/rechercheUtilisateur" method="POST")
