@@ -14,7 +14,7 @@ var expressValidator = require('express-validator');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var multer = require('multer');
-var upload = multer({dest:'./uploads'});
+var upload = multer({dest:'public/uploads/'});
 var User = require('./models/User');
 
 // Controllers
@@ -57,8 +57,6 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'uploads')));
-
 
 app.get('/', HomeController.index);
 app.get('/chat', userController.ensureAuthenticated, chatController.chatGet);
