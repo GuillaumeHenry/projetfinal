@@ -18,9 +18,33 @@ block content
     .col-md-12
       form.navbar-form.navbar-right.inline-form(action="/rechercheUtilisateur" method="POST")
         .form-group
-          input.input-sm.form-control(type='search', placeholder='Rechercher un ami', name="rechercherUnAmi")
+          input.input-sm.form-control(type='search', placeholder='Rechercher un utilisateur', name="rechercherUnAmi")
           button.btn.btn-primary.btn-sm(type='submit')
             span.glyphicon.glyphicon-eye-open Rehercher
+  .row
+    .col-md-12
+      p Demande d'ami :
+        each amiEnAttente in amisEnAttente
+          #{amiEnAttente.friend.pseudo}
+  .container.bootstrap.snippet.col-md-6
+    .header
+      h3.text-muted.prj-name
+        span.fa.fa-users.fa-2x.principal-title
+        |         Liste d'utilisateurs
+    .jumbotron.list-content
+      ul.list-group
+        li.list-group-item.title(href='#')
+          | Utilisateurs
+        li.list-group-item.text-left(href='#')
+          each membre in membres
+            img.img-thumbnail(src='/uploads/' + membre.photo, width='150', height='75')
+            label.name
+              | #{membre.pseudo}
+              br
+            label.pull-right
+              a.btn.btn-success.btn-md(href='/account/' + membre.pseudo, title='Voir le profil') Profil
+            .break
+          hr
   .container.bootstrap.snippet.col-md-6
     .header
       h3.text-muted.prj-name
@@ -31,48 +55,17 @@ block content
         li.list-group-item.title(href='#')
           | Amis
         li.list-group-item.text-left(href='#')
-          each membre in membres
-            img.img-thumbnail(src='/uploads/' + membre.photo, width='150', height='75')
+          each ami in amis
+            img.img-thumbnail(src='/uploads/' + ami.friend.photo, width='150', height='75')
             label.name
-              | #{membre.pseudo}
+              | #{ami.friend.pseudo}
               br
             label.pull-right
-              a.btn.btn-success.btn-xs.glyphicon.glyphicon-ok(href='/account/' + membre.pseudo, title='Voir le profil')
-              a.btn.btn-danger.btn-xs.glyphicon.glyphicon-trash(href='/account/deleteFriend', title='Supprimer ami')
-              a.btn.btn-info.btn-xs.glyphicon.glyphicon.glyphicon-comment(href='/envoiMessage', title='Envoi message')
+              a.btn.btn-success.btn-sm.glyphicon.glyphicon-ok(href='/account/' + ami.friend.pseudo, title='Voir le profil')
+              a.btn.btn-danger.btn-sm.glyphicon.glyphicon-trash(href='/deleteFriend/' + ami.friend.pseudo, title='Supprimer ami')
+              a.btn.btn-info.btn-sm.glyphicon.glyphicon.glyphicon-comment(href='/chat', title='Envoi message')
             .break
           hr
   br
   br
   br
-  .col-md-6
-    .panel.panel-primary
-      #accordion.panel-heading
-        span.glyphicon.glyphicon-comment
-        |  Chat
-        .btn-group.pull-right
-          a.btn.btn-default.btn-xs(type='button', data-toggle='collapse', data-parent='#accordion', href='#collapseOne')
-            span.glyphicon.glyphicon-chevron-down
-      #collapseOne.panel-collapse
-        .panel-body
-          ul.chat
-            li.left.clearfix
-              span.chat-img.pull-left
-                img.img-circle(src='http://placehold.it/50/55C1E7/fff&text=U', alt='User Avatar')
-              .chat-body.clearfix
-                .header
-                  strong.primary-font=membres[0].pseudo
-                p Message
-            li.right.clearfix
-              span.chat-img.pull-right
-                img.img-circle(src='http://placehold.it/50/FA6F57/fff&text=ME', alt='User Avatar')
-              .chat-body.clearfix
-                .header
-                  strong.pull-right.primary-font=membres[1].pseudo
-                p Message
-        .panel-footer
-          .input-group
-            input#btn-input.form-control.input-sm(type='text', placeholder='Type your message here...')
-            span.input-group-btn
-              button#btn-chat.btn.btn-warning.btn-sm
-                | Send

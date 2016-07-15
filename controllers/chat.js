@@ -8,3 +8,12 @@ exports.chatGet = function (req, res) {
         title: 'Chat'
     });
 };
+
+/**
+ * GET /chat privé
+ */
+exports.chatPriveGet = function (req, res) {
+    res.render('chatprive', {
+        title: 'Chat privé'
+    });
+};

@@ -1,12 +1,15 @@
 var async = require('async');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
-var app = require('../server');
-var io = app.io;
+var server = require('../server');
 var passport = require('passport');
 var User = require('../models/User');
 var membres = [];
-
+var ajouterAmi = function (ami) {
+  return {accepte:false, ami:ami};
+};
+var amiSur;
+var amiEnAttente;
 //var io = app.io;
 //io.on('connection', function (socket) {
 //  socket.emit('yo', {yo:'yo'});
@@ -60,17 +63,21 @@ exports.membreGet = function (req, res) {
 /**
  * POST /membres
  */
-exports.membrePost = function (req,res, next) {
+exports.membrePost = function (req,res) {
+
   var ami = req.params.membre;
+
   User.find({pseudo:ami}, function (err, nouvelAmi) {
-    console.log('ami à ajouter: ' + nouvelAmi[0].pseudo)
+
     if (err) return console.error(err);
+
     User.find({email:req.user.email}, function (err, user) {
+
       if (err) return console.error (err);
-      console.log('Utilisateur :' + user[0].pseudo )
-      // ajouter un nouvel ami
-      var ajoutAmi = user[0].amis;
-      ajoutAmi.push(nouvelAmi);
+
+      //requête d'amitié
+      User.requestFriend(user[0]._id, nouvelAmi[0]._id);
+
       var transporter = nodemailer.createTransport({
         service: 'Mailgun',
         auth: {
@@ -78,34 +85,68 @@ exports.membrePost = function (req,res, next) {
           pass: process.env.MAILGUN_PASSWORD
         }
       });
+
       var mailOptions = {
         from:user[0].email,
         to: nouvelAmi[0].email,
         subject: 'Demande d\'ami',
         text: user[0].pseudo + ' souhaite devenir votre ami. \n Vous pouvez vous connecter pour répondre à sa demande: http://reseausocialguillaumehenry.herokuapp.com/login'
       };
+
       req.flash('success', { msg: 'Votre demande d\'ami a bien été envoyé à ' + nouvelAmi[0].pseudo});
-      user[0].save(function (err) {
-        res.redirect('/wall');
-      });
+
+      res.redirect('/wall');
+
       transporter.sendMail(mailOptions, function(err) {
       });
-      console.log('amis de l\'utilisateur: ' + user[0].amis);
+      //console.log('amis de l\'utilisateur: ' + user[0].amis[0].ami);
     });
   });
+};
+
+
+/**
+ * DELETE /friend
+ */
+
+exports.deleteFriend = function (req, res) {
+  User.find({pseudo: req.params.membre}, function (err, mauvaisAmi) {
+    User.find({email:req.user.email}, function (err, user) {
+      User.removeFriend(user[0], mauvaisAmi[0]);
+    });
+  });
+  res.redirect('/wall');
 };
 
 /**
  * GET /wall
  */
 exports.wallGet = function (req, res) {
+
   User.find(function (err, users) {
-    if (err) return console.error(err);
-    res.render('account/wall', {
-      title: 'Wall',
-      membres: users
-    });
+    User.find ({email:req.user.email}, function (err, user) {
+      if (err) return console.error(err);
+      User.getAcceptedFriends(user[0], function (err, amis) {
+        User.getPendingFriends(user[0], function (err, amisEnAttente) {
+          //console.log(amis);
+          res.render('account/wall', {
+            title: 'Wall',
+            membres: users,
+            amis: amis, 
+            amisEnAttente: amisEnAttente
+          });
+          
+        });
+          
+      });
+
+
   });
+
+
+
+  });
+
 };
 
 /**

@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
 var friends = require("mongoose-friends");
 
+
 var schemaOptions = {
   timestamps: true,
   toJSON: {
@@ -28,6 +29,8 @@ var userSchema = new mongoose.Schema({
   twitter: String,
   google: String,
   vk: String,
+  demandeAmi:Boolean,
+  isAdmin:Boolean,
   amis: Array,
   messages: Array
 }, schemaOptions);
@@ -48,6 +51,9 @@ userSchema.methods.comparePassword = function(password, cb) {
     cb(err, isMatch);
   });
 };
+
+userSchema.plugin(friends({pathName: "myCustomPath"}));
+
 
 var User = mongoose.model('User', userSchema);
 
