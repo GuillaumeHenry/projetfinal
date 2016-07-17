@@ -104,6 +104,25 @@ exports.membrePost = function (req,res) {
   });
 };
 
+/**
+ * POST /envoi message
+ */
+
+exports.envoiMessage = function (req,res) {
+  console.log(req.body.envoiMessage);
+  User.find({pseudo:req.params.membre}, function (err, membre) {
+    membre[0].messages.push(req.body.envoiMessage);
+    console.log(membre[0].messages);
+    req.flash('success', {msg:'Votre message a bien été transmis à ' + req.params.membre});
+    res.render('account/membre', {
+      title: 'Profil de ' + req.params.membre,
+      membres: membre[0],
+      messages: membre[0].messages
+    });
+  });
+
+
+};
 
 /**
  * DELETE /friend
@@ -128,7 +147,7 @@ exports.wallGet = function (req, res) {
     User.find ({email:req.user.email}, function (err, user) {
 
       if (err) return console.error(err);
-      
+
       User.getAcceptedFriends(user[0], function (err, amis) {
 
           res.render('account/wall', {

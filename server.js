@@ -65,6 +65,7 @@ app.post('/rechercheUtilisateur', userController.ensureAuthenticated, userContro
 app.get('/account/:membre', userController.ensureAuthenticated, userController.membreGet);
 app.post('/account/:membre', userController.ensureAuthenticated, userController.membrePost);
 app.get('/deleteFriend/:membre',  userController.ensureAuthenticated, userController.deleteFriend);
+app.post('/envoiMessage/:membre', userController.ensureAuthenticated, userController.envoiMessage)
 app.get('/contact', contactController.contactGet);
 app.post('/contact', contactController.contactPost);
 app.get('/wall', userController.ensureAuthenticated, userController.wallGet);

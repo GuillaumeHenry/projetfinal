@@ -10,4 +10,19 @@ block content
       .col-md-12
         form(action="/account/" + membres.pseudo , method="POST")
           input#ajout_ami.btn.btn-large.btn-success(type="submit", value="Ajouter un ami", data-toggle='confirmation', data-original-title='', title='Bêêêê')
-
+          br
+          br
+          br
+      .col-md-12
+        form.form-horizontal(action='/envoiMessage/' + membres.pseudo, method="POST")
+          .form-group
+          label.col-sm-3(for="envoiMessage") Envoi message:
+          .col-sm-7
+            input#envoiMessage.form-control(type="text", placeholder="Message", name="envoiMessage")
+          input.btn.btn-large.btn-success(type="submit")
+    .row.text-center
+      .col-md-12
+        h1 Messages
+        ul
+          each message in messages
+            li=message
