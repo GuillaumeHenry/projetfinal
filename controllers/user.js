@@ -114,12 +114,31 @@ exports.envoiMessage = function (req,res) {
     membre[0].messages.push(req.body.envoiMessage);
     console.log(membre[0].messages);
     req.flash('success', {msg:'Votre message a bien été transmis à ' + req.params.membre});
+    User.find({email:req.user.email}, function (err, user) {
+      var transporter = nodemailer.createTransport({
+        service: 'Mailgun',
+        auth: {
+          user: process.env.MAILGUN_USERNAME,
+          pass: process.env.MAILGUN_PASSWORD
+        }
+      });
+      var mailOptions = {
+        from:'henry_guillaume@hotmail.fr',
+        to: membre[0].email,
+        subject: 'Vous avez un nouveau message',
+        text: 'Vous avez reçu un nouveau message de ' + user[0].pseudo + ': ' + membre[0].messages[0]
+      };
+      transporter.sendMail(mailOptions);
+
+    });
+
     res.render('account/membre', {
       title: 'Profil de ' + req.params.membre,
       membres: membre[0],
       messages: membre[0].messages
     });
-  });
+
+    });
 
 
 };
