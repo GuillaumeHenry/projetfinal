@@ -124,20 +124,19 @@ exports.deleteFriend = function (req, res) {
 exports.wallGet = function (req, res) {
 
   User.find(function (err, users) {
+
     User.find ({email:req.user.email}, function (err, user) {
+
       if (err) return console.error(err);
+      
       User.getAcceptedFriends(user[0], function (err, amis) {
-        User.getPendingFriends(user[0], function (err, amisEnAttente) {
-          //console.log(amis);
+
           res.render('account/wall', {
             title: 'Wall',
             membres: users,
-            amis: amis, 
-            amisEnAttente: amisEnAttente
+            amis: amis
           });
-          
-        });
-          
+
       });
 
 
@@ -232,7 +231,7 @@ exports.signupGet = function(req, res) {
  * POST /signup
  */
 exports.signupPost = function(req, res, next) {
-  req.assert('name', 'le nom ne peut être vide').notEmpty();
+  req.assert('pseudo', 'le pseudo ne peut être vide').notEmpty();
   req.assert('email', 'l\' email n\'est pas valide').isEmail();
   req.assert('email', 'l\' email ne peut être vide').notEmpty();
   req.assert('password', 'Le mot de passe doit faire au minimum 4 caractères').len(4);
@@ -252,7 +251,7 @@ exports.signupPost = function(req, res, next) {
       return res.redirect('/signup');
     }
     user = new User({
-      name: req.body.name,
+      pseudo: req.body.pseudo,
       email: req.body.email,
       password: req.body.password
     });
@@ -266,16 +265,16 @@ exports.signupPost = function(req, res, next) {
     var mailOptions = {
       from:'henry_guillaume@hotmail.fr',
       to: req.body.email,
-      subject: 'vous êtes bien inscrit',
-      text: 'Votre compte a bien été créé nous vous invitons à vous connecter'
+      subject: 'Bienvenue !',
+      text: 'Votre compte a bien été créé. \n Vous pouvez désormais remplir votre profil et naviguer parmi les utilisateurs à la recherche d\'amis ! \n http://reseausocialguillaumehenry.herokuapp.com'
     };
-
 
     user.save(function(err) {
       req.logIn(user, function(err) {
         res.redirect('/account');
       });
     });
+
     transporter.sendMail(mailOptions, function(err) {
       req.flash('success', { msg: 'Merci! Votre message a bien été transmis.' });
     });

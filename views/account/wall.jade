@@ -21,11 +21,6 @@ block content
           input.input-sm.form-control(type='search', placeholder='Rechercher un utilisateur', name="rechercherUnAmi")
           button.btn.btn-primary.btn-sm(type='submit')
             span.glyphicon.glyphicon-eye-open Rehercher
-  .row
-    .col-md-12
-      p Demande d'ami :
-        each amiEnAttente in amisEnAttente
-          #{amiEnAttente.friend.pseudo}
   .container.bootstrap.snippet.col-md-6
     .header
       h3.text-muted.prj-name

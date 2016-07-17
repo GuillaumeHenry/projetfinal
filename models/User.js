@@ -57,5 +57,4 @@ userSchema.plugin(friends({pathName: "myCustomPath"}));
 
 var User = mongoose.model('User', userSchema);
 
-
 module.exports = User;

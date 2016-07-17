@@ -26,11 +26,11 @@ block content
           .form-group
             label.col-sm-3(for='name') Nom
             .col-sm-7
-              input.form-control(type='text', name='name', id='name', value=user.name)
+              input.form-control(type='text', name='name', id='name', placeholder="Nom", value=user.name)
           .form-group
             label.col-sm-3(for='prenom') Prenom
             .col-sm-7
-              input.form-control(type='text', name='prenom', id='prenom', value=user.prenom)
+              input.form-control(type='text', name='prenom', id='prenom', placeholder="Prénom", value=user.prenom)
           .form-group
             label.col-sm-3 Genre
             .col-sm-4
@@ -43,15 +43,15 @@ block content
           .form-group
             label.col-sm-3(for='age') Age
             .col-sm-7
-              input.form-control(type='number', name='age', id='age', value=user.age)
+              input.form-control(type='number', name='age', id='age', placeholder="Age", value=user.age, min="0", max="99")
           .form-group
             label.col-sm-3(for='location') Coordonnées
             .col-sm-7
-              input.form-control(type='text', name='location', id='location', value=user.location)
+              input.form-control(type='text', name='location', id='location',placeholder="Coordonnées", value=user.location)
           .form-group
             label.col-sm-3(for='website') Site internet
             .col-sm-7
-              input.form-control(type='text', name='website', id='website', value=user.website)
+              input.form-control(type='text', name='website', id='website',placeholder="Site Internet", value=user.website)
           if user.photo
             .form-group
               label.col-sm-3
